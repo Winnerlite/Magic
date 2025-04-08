@@ -26,6 +26,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -37,53 +38,56 @@
         }
 
         /* Onboarding Modal */
-        .modal-overlay {
+        .onboarding-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-        }
-
-        .modal {
             background: var(--white);
-            padding: 2rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            width: 90%;
-            max-width: 400px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
             text-align: center;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
-            opacity: 0;
-            transition: var(--transition);
         }
 
-        .modal.active {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
+        .onboarding-logo {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .modal input {
-            width: 100%;
-            padding: 12px;
-            margin: 15px 0;
+        .onboarding-logo i {
+            font-size: clamp(2rem, 5vw, 2.8rem);
+        }
+
+        .onboarding-description {
+            color: var(--gray);
+            margin-bottom: 30px;
+            max-width: min(80%, 500px);
+            line-height: 1.5;
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+        }
+
+        .onboarding-input {
+            width: min(80%, 300px);
+            padding: clamp(12px, 3vw, 15px);
             border: 2px solid var(--light-gray);
-            border-radius: 8px;
+            border-radius: var(--radius);
             font-size: 1rem;
+            margin-bottom: 20px;
             outline: none;
             transition: var(--transition);
         }
 
-        .modal input:focus {
+        .onboarding-input:focus {
             border-color: var(--primary);
         }
 
@@ -92,7 +96,7 @@
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: var(--white);
             border: none;
-            padding: 12px 30px;
+            padding: clamp(10px, 3vw, 12px) clamp(20px, 5vw, 30px);
             border-radius: 25px;
             font-weight: 600;
             cursor: pointer;
@@ -100,7 +104,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-size: 1rem;
+            font-size: clamp(0.9rem, 3vw, 1rem);
             margin: 5px;
             box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
         }
@@ -150,11 +154,52 @@
             padding: 20px;
             text-align: center;
             background: linear-gradient(135deg, #f9f9ff, #f0f2ff);
+            position: relative;
+        }
+
+        /* Try Counter */
+        .try-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 15px;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .try-counter i {
+            font-size: 1rem;
+        }
+
+        /* Image Quality Selector */
+        .compression-quality {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .compression-quality label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .compression-quality select {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid var(--light-gray);
         }
 
         .scan-button {
-            width: 200px;
-            height: 200px;
+            width: clamp(140px, 40vw, 200px);
+            height: clamp(140px, 40vw, 200px);
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             border-radius: 50%;
             cursor: pointer;
@@ -162,7 +207,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
             color: var(--white);
             font-weight: 600;
             text-transform: uppercase;
@@ -193,15 +238,51 @@
         .scan-instructions {
             color: var(--gray);
             margin-bottom: 15px;
-            font-size: 1rem;
-            max-width: 80%;
+            font-size: clamp(0.85rem, 3vw, 1rem);
+            max-width: min(80%, 500px);
         }
 
         .powered-by {
             color: var(--gray);
-            font-size: 0.8rem;
+            font-size: clamp(0.7rem, 2.5vw, 0.8rem);
             opacity: 0.7;
             margin-top: 30px;
+        }
+
+        /* Premium Lock Modal */
+        .premium-lock-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .premium-lock-modal h2 {
+            color: #fdcb6e;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .premium-lock-modal p {
+            color: var(--gray);
+            margin-bottom: 25px;
+            max-width: 80%;
+        }
+
+        .time-remaining {
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 20px;
+            font-size: 1.1rem;
         }
 
         /* Loading and Error Messages */
@@ -230,7 +311,7 @@
             max-width: 600px;
             margin: 0 auto;
             animation: fadeIn 0.5s ease;
-            padding-bottom: 100px; /* Add space for save button */
+            padding-bottom: 100px;
         }
 
         @keyframes fadeIn {
@@ -248,19 +329,19 @@
 
         .recipe-image {
             width: 100%;
-            height: 250px;
+            height: clamp(180px, 40vw, 250px);
             object-fit: cover;
             border-radius: var(--radius) var(--radius) 0 0;
         }
 
         .recipe-content {
-            padding: 25px;
+            padding: clamp(15px, 3vw, 25px);
         }
 
         .recipe-title {
             color: var(--primary);
             margin-bottom: 15px;
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
             font-weight: 600;
         }
 
@@ -271,7 +352,7 @@
         .ingredients-list h3, .recipes-list h3 {
             color: var(--dark);
             margin-bottom: 12px;
-            font-size: 1.1rem;
+            font-size: clamp(1rem, 3vw, 1.1rem);
             font-weight: 500;
             display: flex;
             align-items: center;
@@ -291,6 +372,7 @@
             margin-bottom: 8px;
             position: relative;
             line-height: 1.5;
+            font-size: clamp(0.85rem, 3vw, 1rem);
         }
 
         .ingredients-list li::before, .recipes-list li::before {
@@ -315,10 +397,12 @@
             color: var(--primary);
             margin-bottom: 20px;
             text-align: center;
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .saved-list {
@@ -350,8 +434,8 @@
         }
 
         .saved-item-thumb {
-            width: 50px;
-            height: 50px;
+            width: clamp(40px, 10vw, 50px);
+            height: clamp(40px, 10vw, 50px);
             border-radius: 8px;
             object-fit: cover;
             margin-right: 15px;
@@ -359,7 +443,7 @@
         }
 
         .saved-item-date {
-            font-size: 0.8rem;
+            font-size: clamp(0.7rem, 2.5vw, 0.8rem);
             opacity: 0.8;
         }
 
@@ -385,14 +469,16 @@
             color: var(--primary);
             margin-bottom: 20px;
             text-align: center;
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .user-name {
-            font-size: 0.9rem;
+            font-size: clamp(0.8rem, 3vw, 0.9rem);
             color: var(--gray);
             margin-right: 10px;
         }
@@ -407,7 +493,7 @@
             background: var(--white);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            padding: 20px;
+            padding: clamp(15px, 3vw, 20px);
             transition: var(--transition);
             cursor: pointer;
         }
@@ -423,11 +509,12 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: clamp(1rem, 3vw, 1.1rem);
         }
 
         .settings-card p {
             color: var(--gray);
-            font-size: 0.9rem;
+            font-size: clamp(0.8rem, 3vw, 0.9rem);
         }
 
         /* Premium Page */
@@ -443,14 +530,14 @@
         .premium-title {
             color: #fdcb6e;
             margin-bottom: 20px;
-            font-size: 1.8rem;
+            font-size: clamp(1.4rem, 5vw, 1.8rem);
         }
 
         .premium-features {
             background: var(--white);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            padding: 20px;
+            padding: clamp(15px, 3vw, 20px);
             margin-bottom: 30px;
         }
 
@@ -464,6 +551,7 @@
             margin-bottom: 10px;
             padding-left: 25px;
             position: relative;
+            font-size: clamp(0.9rem, 3vw, 1rem);
         }
 
         .premium-features li::before {
@@ -482,7 +570,7 @@
             display: flex;
             justify-content: space-around;
             background: var(--white);
-            padding: 15px 0;
+            padding: clamp(10px, 3vw, 15px) 0;
             box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
             z-index: 100;
             border-radius: var(--radius) var(--radius) 0 0;
@@ -490,7 +578,7 @@
 
         .nav-item {
             color: var(--gray);
-            font-size: 1.4rem;
+            font-size: clamp(1.1rem, 4vw, 1.4rem);
             transition: var(--transition);
             cursor: pointer;
             display: flex;
@@ -498,12 +586,12 @@
             align-items: center;
             gap: 5px;
             position: relative;
-            padding: 10px 15px;
+            padding: clamp(8px, 2vw, 10px) clamp(12px, 3vw, 15px);
             border-radius: 50px;
         }
 
         .nav-item span {
-            font-size: 0.7rem;
+            font-size: clamp(0.6rem, 2.5vw, 0.7rem);
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 500;
@@ -512,172 +600,278 @@
         .nav-item.active {
             color: var(--primary);
             background: rgba(108, 92, 231, 0.1);
-            transform: translateY(-10px);
+            transform: translateY(clamp(-8px, -2vw, -10px));
         }
 
         .nav-item.active::before {
             content: '';
             position: absolute;
             top: -10px;
-            width: 50px;
+            width: clamp(40px, 10vw, 50px);
             height: 3px;
             background: var(--primary);
             border-radius: 3px;
         }
 
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            width: 90%;
+            max-width: 400px;
+            padding: 25px;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .modal-message {
+            margin-bottom: 20px;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .modal-btn-confirm {
+            background: linear-gradient(135deg, var(--secondary), #55efc4);
+            color: white;
+        }
+
+        .modal-btn-cancel {
+            background: var(--light-gray);
+            color: var(--dark);
+        }
+
         /* Responsive Adjustments */
-        @media (max-width: 480px) {
-            .modal {
-                padding: 1.5rem;
+        @media (max-width: 350px) {
+            .onboarding-logo {
+                flex-direction: column;
             }
             
-            .scan-button {
-                width: 160px;
-                height: 160px;
-                font-size: 1.2rem;
+            .saved-title {
+                flex-direction: column;
             }
             
-            .recipe-card, .saved-item, .settings-card {
-                margin: 10px;
-            }
-            
-            .nav-item {
-                font-size: 1.2rem;
-                padding: 8px 12px;
-            }
-            
-            .nav-item.active {
-                transform: translateY(-8px);
+            .modal-buttons {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Onboarding Modal -->
-    <div class="modal-overlay" id="onboardingModal">
-        <div class="modal active" id="modalStep1">
-            <h1>Welcome to Food Alchemist 🧙‍♂️</h1>
-            <p>Transform your ingredients into delicious meals with AI magic!</p>
-            <input type="text" id="userNameInput" placeholder="Enter your name" onclick="event.stopPropagation()">
-            <button class="btn" onclick="nextModalStep(2)">
-                Continue <i class="fas fa-arrow-right"></i>
-            </button>
+    <!-- Onboarding Container -->
+    <div class="onboarding-container" id="onboardingContainer">
+        <div class="onboarding-logo">
+            <i class="fas fa-hat-wizard"></i>
+            <span>Food Alchemist</span>
         </div>
-
-        <div class="modal" id="modalStep2">
-            <h1>How It Works 📸</h1>
-            <p>1. Snap your ingredients<br>2. Get instant recipes<br>3. Cook like a pro!</p>
-            <button class="btn" onclick="nextModalStep(3)">
-                Next <i class="fas fa-arrow-right"></i>
-            </button>
-        </div>
-
-        <div class="modal" id="modalStep3">
-            <h1>Important ⚠️</h1>
-            <p>Always check for food allergies and expiration dates before cooking!</p>
-            <button class="btn" onclick="finishOnboarding()">
-                Start Cooking <i class="fas fa-utensils"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- Scan Page -->
-    <div class="scan-page" id="scanPage">
-        <div class="scan-button" onclick="openCamera()">
-            TAP
-        </div>
-        <p class="scan-instructions">Tap to scan your ingredients and discover magical recipes</p>
-        <p class="powered-by">Powered by Aktum Technologies</p>
-        
-        <!-- Loading Indicator -->
-        <div class="loading-indicator" id="loadingIndicator">
-            <i class="fas fa-spinner fa-spin"></i> Analyzing ingredients...
-        </div>
-        
-        <!-- Error Message -->
-        <div class="error-message" id="errorMessage"></div>
-    </div>
-
-    <!-- Recipe Results -->
-    <div class="recipe-results" id="recipeResults">
-        <!-- Results will be inserted here -->
-    </div>
-
-    <!-- Saved Recipes -->
-    <div class="saved-recipes" id="savedRecipes">
-        <h2 class="saved-title">
-            <span>Your Saved Recipes</span>
-            <button class="btn btn-delete" onclick="clearSavedRecipes()">
-                <i class="fas fa-trash"></i> Clear All
-            </button>
-        </h2>
-        <div class="saved-list" id="savedList">
-            <!-- Saved items will be inserted here -->
-        </div>
-    </div>
-
-    <!-- Settings Page -->
-    <div class="settings-page" id="settingsPage">
-        <h2 class="settings-title">
-            <span>Settings</span>
-            <span class="user-name" id="userNameDisplay"></span>
-        </h2>
-        <div class="settings-cards">
-            <div class="settings-card" onclick="showPremiumPage()">
-                <h3><i class="fas fa-crown"></i> Go Premium</h3>
-                <p>Unlock exclusive features with our premium subscription</p>
-            </div>
-            <div class="settings-card">
-                <h3><i class="fas fa-bell"></i> Notifications</h3>
-                <p>Manage your notification preferences</p>
-            </div>
-            <div class="settings-card">
-                <h3><i class="fas fa-shield-alt"></i> Privacy</h3>
-                <p>Review our privacy policy and settings</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Premium Page -->
-    <div class="premium-page" id="premiumPage">
-        <button class="btn btn-back" onclick="backToSettings()">
-            <i class="fas fa-arrow-left"></i> Back to Settings
-        </button>
-        <h2 class="premium-title"><i class="fas fa-crown"></i> Premium Membership</h2>
-        
-        <div class="premium-features">
-            <h3>Unlock These Exclusive Features:</h3>
-            <ul>
-                <li>Unlimited recipe suggestions</li>
-                <li>Priority processing of your scans</li>
-                <li>Advanced recipe filtering</li>
-                <li>Exclusive premium recipes</li>
-                <li>Ad-free experience</li>
-            </ul>
-        </div>
-        
-        <button class="btn btn-premium" onclick="subscribePremium()">
-            <i class="fas fa-gem"></i> Subscribe Now ($5 one-time)
-        </button>
-        
-        <p style="margin-top: 20px; color: var(--gray); font-size: 0.9rem;">
-            One-time payment • No recurring charges
+        <p class="onboarding-description">
+            Transform your ingredients into delicious meals with our AI-powered recipe generator.
+            Just snap a photo and let the magic begin!
         </p>
+        <input type="text" class="onboarding-input" id="userNameInput" placeholder="Enter your name">
+        <button class="btn" onclick="finishOnboarding()">
+            Start Cooking <i class="fas fa-utensils"></i>
+        </button>
     </div>
 
-    <!-- Navigation Bar -->
-    <div class="nav-bar">
-        <div class="nav-item active" onclick="showTab('scanPage')">
-            <i class="fas fa-camera"></i>
-            <span>Scan</span>
+    <!-- Main App Content (hidden initially) -->
+    <div id="appContent" style="display: none;">
+        <!-- Scan Page -->
+        <div class="scan-page" id="scanPage">
+            <div class="try-counter" id="tryCounter">
+                <i class="fas fa-bolt"></i>
+                <span id="triesRemaining">15</span> tries left
+            </div>
+            
+            
+            
+            <div class="scan-button" onclick="handleScanClick()">
+                TAP
+            </div>
+            <p class="scan-instructions">Tap to scan your ingredients and discover magical recipes</p>
+            <p class="powered-by">Powered by Aktum Technologies</p>
+            
+            <div class="compression-quality">
+                <label for="imageQuality">Image Quality:</label>
+                <select id="imageQuality">
+                    <option value="0.7">Medium (recommended)</option>
+                    <option value="1">High</option>
+                    <option value="0.4">Low</option>
+                </select>
+            </div>
+            
+            <!-- Loading Indicator -->
+            <div class="loading-indicator" id="loadingIndicator">
+                <i class="fas fa-spinner fa-spin"></i> Analyzing ingredients...
+            </div>
+            
+            <!-- Error Message -->
+            <div class="error-message" id="errorMessage"></div>
+            
+            <!-- Premium Lock Modal (initially hidden) -->
+            <div class="premium-lock-modal" id="premiumLockModal" style="display: none;">
+                <h2><i class="fas fa-crown"></i> Upgrade to Premium</h2>
+                <p>You've used all your free scans. Upgrade to premium for unlimited scans and exclusive features!</p>
+                <button class="btn btn-premium" onclick="showPremiumPage()">
+                    <i class="fas fa-gem"></i> Get Premium Now
+                </button>
+                <div class="time-remaining" id="timeRemaining">
+                    Time remaining: 2:00:00
+                </div>
+            </div>
         </div>
-        <div class="nav-item" onclick="showTab('savedRecipes')">
-            <i class="fas fa-bookmark"></i>
-            <span>Saved</span>
+
+        <!-- Recipe Results -->
+        <div class="recipe-results" id="recipeResults">
+            <!-- Results will be inserted here -->
         </div>
-        <div class="nav-item" onclick="showTab('settingsPage')">
-            <i class="fas fa-cog"></i>
-            <span>Settings</span>
+
+        <!-- Saved Recipes -->
+        <div class="saved-recipes" id="savedRecipes">
+            <h2 class="saved-title">
+                <span>Your Saved Recipes</span>
+                <button class="btn btn-delete" onclick="showClearRecipesModal()">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+            </h2>
+            <div class="saved-list" id="savedList">
+                <!-- Saved items will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div class="settings-page" id="settingsPage">
+            <h2 class="settings-title">
+                <span>Settings</span>
+                <span class="user-name" id="userNameDisplay"></span>
+            </h2>
+            <div class="settings-cards">
+                <div class="settings-card" onclick="showPremiumPage()">
+                    <h3><i class="fas fa-crown"></i> Go Premium</h3>
+                    <p>Unlock exclusive features with our premium subscription</p>
+                </div>
+                <div class="settings-card">
+                    <h3><i class="fas fa-bell"></i> Notifications</h3>
+                    <p>Manage your notification preferences</p>
+                </div>
+                <div class="settings-card">
+                    <h3><i class="fas fa-shield-alt"></i> Privacy</h3>
+                    <p>Review our privacy policy and settings</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Premium Page -->
+        <div class="premium-page" id="premiumPage">
+            <button class="btn btn-back" onclick="backToSettings()">
+                <i class="fas fa-arrow-left"></i> Back to Settings
+            </button>
+            <h2 class="premium-title"><i class="fas fa-crown"></i> Premium Membership</h2>
+            
+            <div class="premium-features">
+                <h3>Unlock These Exclusive Features:</h3>
+                <ul>
+                    <li>Unlimited recipe suggestions</li>
+                    <li>Priority processing of your scans</li>
+                    <li>Advanced recipe filtering</li>
+                    <li>Exclusive premium recipes</li>
+                    <li>Ad-free experience</li>
+                </ul>
+            </div>
+            
+            <button class="btn btn-premium" onclick="subscribePremium()">
+                <i class="fas fa-gem"></i> Subscribe Now ($5 one-time)
+            </button>
+            
+            <p style="margin-top: 20px; color: var(--gray); font-size: 0.9rem;">
+                One-time payment • No recurring charges
+            </p>
+        </div>
+
+        <!-- Navigation Bar -->
+        <div class="nav-bar">
+            <div class="nav-item active" onclick="showTab('scanPage')">
+                <i class="fas fa-camera"></i>
+                <span>Scan</span>
+            </div>
+            <div class="nav-item" onclick="showTab('savedRecipes')">
+                <i class="fas fa-bookmark"></i>
+                <span>Saved</span>
+            </div>
+            <div class="nav-item" onclick="showTab('settingsPage')">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Overlays -->
+    <div class="modal-overlay" id="saveRecipeModal">
+        <div class="modal">
+            <h3 class="modal-title"><i class="fas fa-bookmark"></i> Recipe Saved</h3>
+            <p class="modal-message">Your recipe has been successfully saved to your collection!</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-confirm" onclick="hideSaveRecipeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="clearRecipesModal">
+        <div class="modal">
+            <h3 class="modal-title"><i class="fas fa-exclamation-triangle"></i> Clear All Recipes?</h3>
+            <p class="modal-message">Are you sure you want to delete all your saved recipes? This action cannot be undone.</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" onclick="hideClearRecipesModal()">Cancel</button>
+                <button class="modal-btn modal-btn-confirm" onclick="clearSavedRecipes()">Delete All</button>
+            </div>
         </div>
     </div>
 
@@ -688,6 +882,173 @@
         let currentRecipeData = null;
         let userName = localStorage.getItem('userName') || '';
         let currentTab = 'scanPage';
+
+        // Try counter variables
+        const MAX_TRIES = 15;
+        let remainingTries = localStorage.getItem('remainingTries') ? 
+            parseInt(localStorage.getItem('remainingTries')) : MAX_TRIES;
+        let lockoutEndTime = localStorage.getItem('lockoutEndTime');
+        let lockoutInterval;
+
+        // ========== Onboarding Functions ==========
+        function finishOnboarding() {
+            // Save user name
+            const nameInput = document.getElementById('userNameInput').value.trim();
+            if (nameInput) {
+                userName = nameInput;
+                localStorage.setItem('userName', userName);
+                updateUserNameDisplay();
+            }
+            
+            // Mark onboarding as complete
+            localStorage.setItem('onboarded', 'true');
+            
+            // Hide onboarding and show app
+            document.getElementById('onboardingContainer').style.display = 'none';
+            document.getElementById('appContent').style.display = 'block';
+            
+            // Initialize the app
+            initializeApp();
+            initTryCounter();
+        }
+
+        // ========== App Initialization ==========
+        function initializeApp() {
+            updateUserNameDisplay();
+            showTab('scanPage');
+        }
+
+        // ========== Try Counter Functions ==========
+        function initTryCounter() {
+            updateTryCounterDisplay();
+            
+            // Check if we're in a lockout period
+            if (lockoutEndTime) {
+                const now = new Date().getTime();
+                const endTime = parseInt(lockoutEndTime);
+                
+                if (now < endTime) {
+                    // Still in lockout period
+                    startLockoutTimer(endTime - now);
+                    showPremiumLockModal();
+                    setRemainingTries(0);
+                } else {
+                    // Lockout period ended
+                    localStorage.removeItem('lockoutEndTime');
+                    lockoutEndTime = null;
+                    resetTries();
+                }
+            }
+        }
+        
+        function handleScanClick() {
+            // Check if user has tries remaining
+            if (remainingTries <= 0) {
+                showPremiumLockModal();
+                return;
+            }
+            
+            // Decrement tries
+            setRemainingTries(remainingTries - 1);
+            
+            // Open camera as before
+            openCamera();
+            
+            // Check if tries exhausted
+            if (remainingTries <= 0) {
+                startLockoutPeriod();
+            }
+        }
+        
+        function updateTryCounterDisplay() {
+            const counter = document.getElementById('triesRemaining');
+            if (counter) {
+                counter.textContent = remainingTries;
+                
+                // Change color when low on tries
+                if (remainingTries <= 3) {
+                    counter.style.color = '#ff7675';
+                } else {
+                    counter.style.color = 'inherit';
+                }
+            }
+        }
+        
+        function setRemainingTries(count) {
+            remainingTries = count;
+            localStorage.setItem('remainingTries', remainingTries);
+            updateTryCounterDisplay();
+        }
+        
+        function resetTries() {
+            setRemainingTries(MAX_TRIES);
+        }
+        
+        function startLockoutPeriod() {
+            const now = new Date().getTime();
+            const twoHours = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+            lockoutEndTime = now + twoHours;
+            localStorage.setItem('lockoutEndTime', lockoutEndTime);
+            
+            showPremiumLockModal();
+            startLockoutTimer(twoHours);
+        }
+        
+        function showPremiumLockModal() {
+            if (remainingTries <= 0 && currentTab === 'scanPage') {
+                document.getElementById('premiumLockModal').style.display = 'flex';
+            }
+        }
+        
+        function hidePremiumLockModal() {
+            document.getElementById('premiumLockModal').style.display = 'none';
+        }
+        
+        function startLockoutTimer(duration) {
+            // Clear any existing interval
+            if (lockoutInterval) clearInterval(lockoutInterval);
+            
+            let timeLeft = duration;
+            updateLockoutTimerDisplay(timeLeft);
+            
+            lockoutInterval = setInterval(() => {
+                timeLeft -= 1000;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(lockoutInterval);
+                    localStorage.removeItem('lockoutEndTime');
+                    lockoutEndTime = null;
+                    resetTries();
+                    hidePremiumLockModal();
+                } else {
+                    updateLockoutTimerDisplay(timeLeft);
+                }
+            }, 1000);
+        }
+        
+        function updateLockoutTimerDisplay(milliseconds) {
+            const hours = Math.floor(milliseconds / (1000 * 60 * 60));
+            const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((milliseconds % (1000 * 60)) / 1000);
+            
+            const display = document.getElementById('timeRemaining');
+            if (display) {
+                display.textContent = `Time remaining: ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+        // ========== Image Compression ==========
+        async function compressImage(canvas, quality = 0.7) {
+            return new Promise((resolve) => {
+                canvas.toBlob((blob) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        resolve(reader.result);
+                    };
+                    reader.readAsDataURL(blob);
+                }, 'image/jpeg', quality);
+            });
+        }
 
         // ========== UI Helper Functions ==========
         function showLoading() {
@@ -716,6 +1077,23 @@
             } else {
                 userNameDisplay.textContent = '';
             }
+        }
+
+        // ========== Modal Functions ==========
+        function showSaveRecipeModal() {
+            document.getElementById('saveRecipeModal').classList.add('active');
+        }
+
+        function hideSaveRecipeModal() {
+            document.getElementById('saveRecipeModal').classList.remove('active');
+        }
+
+        function showClearRecipesModal() {
+            document.getElementById('clearRecipesModal').classList.add('active');
+        }
+
+        function hideClearRecipesModal() {
+            document.getElementById('clearRecipesModal').classList.remove('active');
         }
 
         // ========== Image Processing ==========
@@ -855,24 +1233,54 @@
             `;
         }
 
-        function saveRecipe() {
+        async function saveRecipe() {
             if (!currentRecipeData) return;
             
-            const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || []);
-            savedRecipes.unshift(currentRecipeData);
-            localStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
-            
-            // Show saved tab
-            showTab('savedRecipes');
-            loadSavedRecipes();
-            
-            // Show confirmation
-            alert('Recipe saved successfully!');
+            try {
+                // Initialize savedRecipes array if it doesn't exist
+                let savedRecipes = [];
+                const savedRecipesJson = localStorage.getItem('savedRecipes');
+                if (savedRecipesJson) {
+                    savedRecipes = JSON.parse(savedRecipesJson);
+                }
+
+                // Check if we're exceeding localStorage quota
+                const testItem = JSON.stringify([...savedRecipes, currentRecipeData]);
+                if (testItem.length > 4 * 1024 * 1024) { // 4MB limit
+                    throw new Error('Storage limit reached. Please delete some saved recipes.');
+                }
+
+                // Add new recipe
+                savedRecipes.unshift(currentRecipeData);
+                
+                // Save back to localStorage
+                localStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
+                
+                // Show saved tab
+                showTab('savedRecipes');
+                loadSavedRecipes();
+                
+                // Show modal confirmation
+                showSaveRecipeModal();
+            } catch (error) {
+                console.error('Error saving recipe:', error);
+                showError(error.message || 'Failed to save recipe. Please try again.');
+            }
         }
 
         // ========== Saved Recipes Functions ==========
         function loadSavedRecipes() {
-            const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || []);
+            let savedRecipes = [];
+            try {
+                const savedRecipesJson = localStorage.getItem('savedRecipes');
+                if (savedRecipesJson) {
+                    savedRecipes = JSON.parse(savedRecipesJson);
+                }
+            } catch (e) {
+                console.error('Error loading saved recipes:', e);
+                savedRecipes = [];
+            }
+            
             const savedList = document.getElementById('savedList');
             
             if (savedRecipes.length === 0) {
@@ -919,10 +1327,9 @@
         }
 
         function clearSavedRecipes() {
-            if (confirm('Are you sure you want to delete all saved recipes?')) {
-                localStorage.removeItem('savedRecipes');
-                loadSavedRecipes();
-            }
+            localStorage.removeItem('savedRecipes');
+            loadSavedRecipes();
+            hideClearRecipesModal();
         }
 
         // ========== Settings & Premium Functions ==========
@@ -931,6 +1338,7 @@
             document.getElementById('premiumPage').style.display = 'block';
             currentTab = 'premiumPage';
             updateNavBar();
+            hidePremiumLockModal();
         }
 
         function backToSettings() {
@@ -942,6 +1350,9 @@
 
         function subscribePremium() {
             // In a real app, this would connect to a payment processor
+            // For demo purposes, we'll just reset the tries
+            resetTries();
+            hidePremiumLockModal();
             alert('Premium subscription successful! Thank you for your support.');
             backToSettings();
         }
@@ -1008,8 +1419,11 @@
                     captureBtn.remove();
                     flipBtn.remove();
                     
-                    // Process image
-                    const imageData = canvas.toDataURL('image/jpeg');
+                    // Get selected quality
+                    const quality = parseFloat(document.getElementById('imageQuality').value);
+                    
+                    // Process image with quality setting
+                    const imageData = await compressImage(canvas, quality);
                     await processImage(imageData);
                 };
 
@@ -1056,65 +1470,38 @@
             if (tabId === 'scanPage') {
                 document.getElementById('scanPage').style.display = 'flex';
                 currentTab = 'scanPage';
+                // Show modal if in lockout period
+                if (remainingTries <= 0) {
+                    showPremiumLockModal();
+                }
             } else if (tabId === 'recipeResults') {
                 document.getElementById('recipeResults').style.display = 'block';
+                currentTab = 'recipeResults';
+                hidePremiumLockModal();
             } else if (tabId === 'savedRecipes') {
                 document.getElementById('savedRecipes').style.display = 'block';
                 loadSavedRecipes();
                 currentTab = 'savedRecipes';
+                hidePremiumLockModal();
             } else if (tabId === 'settingsPage') {
                 document.getElementById('settingsPage').style.display = 'block';
                 updateUserNameDisplay();
                 currentTab = 'settingsPage';
+                hidePremiumLockModal();
             }
             
             // Update nav items
             updateNavBar();
         }
 
-        // ========== Onboarding Functions ==========
-        function nextModalStep(step) {
-            if (step === 2) {
-                // Save user name when moving to step 2
-                const nameInput = document.getElementById('userNameInput').value.trim();
-                if (nameInput) {
-                    userName = nameInput;
-                    localStorage.setItem('userName', userName);
-                    updateUserNameDisplay();
-                }
-            }
-            
-            document.querySelector('.modal.active').classList.remove('active');
-            document.getElementById(`modalStep${step}`).classList.add('active');
-        }
-
-        function finishOnboarding() {
-            document.getElementById('onboardingModal').style.display = 'none';
-            localStorage.setItem('onboarded', 'true');
-            
-            // Save user name if not already saved
-            const nameInput = document.getElementById('userNameInput').value.trim();
-            if (nameInput && !userName) {
-                userName = nameInput;
-                localStorage.setItem('userName', userName);
-                updateUserNameDisplay();
-            }
-        }
-
         // ========== Initialization ==========
         document.addEventListener('DOMContentLoaded', function() {
-            // Prevent modal from closing when clicking inside input
-            document.getElementById('userNameInput').addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-
-            // Load user name if available
-            userName = localStorage.getItem('userName') || '';
-            updateUserNameDisplay();
-            
-            // Show onboarding if first time
-            if (!localStorage.getItem('onboarded')) {
-                document.getElementById('onboardingModal').style.display = 'flex';
+            // Check if onboarding is needed
+            if (localStorage.getItem('onboarded')) {
+                document.getElementById('onboardingContainer').style.display = 'none';
+                document.getElementById('appContent').style.display = 'block';
+                initializeApp();
+                initTryCounter();
             }
         });
     </script>
