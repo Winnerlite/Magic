@@ -50,7 +50,7 @@
         }
 
         /* Onboarding Modal */
-        .onboarding-container {
+    .onboarding-container {
             position: fixed;
             top: 0;
             left: 0;
@@ -64,16 +64,6 @@
             justify-content: center;
             padding: 20px;
             text-align: center;
-        }
-
-        .onboarding-logo {
-            font-size: clamp(1.8rem, 5vw, 2.5rem);
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .onboarding-logo i {
@@ -276,6 +266,17 @@
             z-index: 1001;
             padding: 20px;
             text-align: center;
+            overflow-y: auto;
+        }
+
+        .premium-lock-content {
+            max-width: 500px;
+            width: 100%;
+            padding: 20px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: auto;
         }
 
         .premium-lock-modal h2 {
@@ -287,7 +288,7 @@
         .premium-lock-modal p {
             color: var(--gray);
             margin-bottom: 25px;
-            max-width: 80%;
+            line-height: 1.5;
         }
 
         .time-remaining {
@@ -498,6 +499,91 @@
             color: white;
         }
 
+        /* Challenges Page */
+        .challenges-page {
+            display: none;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            padding-bottom: 100px;
+            text-align: center;
+        }
+
+        .challenge-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .challenge-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .challenge-question {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .challenge-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .challenge-option {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid var(--light-gray);
+        }
+
+        .challenge-option:hover {
+            background: rgba(108, 92, 231, 0.1);
+            border-color: var(--primary-light);
+        }
+
+        .challenge-option.selected {
+            background: rgba(108, 92, 231, 0.2);
+            border-color: var(--primary);
+            font-weight: 500;
+        }
+
+        .challenge-answer {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 184, 148, 0.1);
+            border-radius: var(--radius);
+            display: none;
+        }
+
+        .challenge-answer.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .next-challenge-btn {
+            margin-top: 20px;
+        }
+
+        .offline-notice {
+            color: var(--gray);
+            font-style: italic;
+            margin-top: 20px;
+        }
+
         /* Settings Page */
         .settings-page {
             display: none;
@@ -605,89 +691,69 @@
             font-weight: bold;
         }
 
-        /* Challenges Page */
-        .challenges-page {
-            display: none;
+        /* Ad Watch Page */
+        .ad-watch-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
             padding: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-            padding-bottom: 100px;
             text-align: center;
         }
-
-        .challenge-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 25px;
-            margin-bottom: 30px;
+        
+        .ad-container {
+            max-width: 500px;
+            width: 100%;
         }
-
-        .challenge-title {
-            color: var(--primary);
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+        
+        .progress-container {
+            margin: 25px 0;
+            background: var(--light-gray);
+            border-radius: 20px;
+            height: 20px;
+            position: relative;
         }
-
-        .challenge-question {
-            font-size: 1.1rem;
-            margin-bottom: 25px;
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 20px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.8rem;
             color: var(--dark);
-            font-weight: 500;
+            font-weight: 600;
         }
-
-        .challenge-options {
+        
+        #adDisplayArea {
+            width: 100%;
+            height: 250px;
+            background: #f0f0f0;
+            margin: 20px 0;
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-
-        .challenge-option {
-            background: var(--light);
-            border-radius: 12px;
-            padding: 12px 15px;
-            cursor: pointer;
-            transition: var(--transition);
-            border: 2px solid var(--light-gray);
-        }
-
-        .challenge-option:hover {
-            background: rgba(108, 92, 231, 0.1);
-            border-color: var(--primary-light);
-        }
-
-        .challenge-option.selected {
-            background: rgba(108, 92, 231, 0.2);
-            border-color: var(--primary);
-            font-weight: 500;
-        }
-
-        .challenge-answer {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(0, 184, 148, 0.1);
+            justify-content: center;
+            align-items: center;
             border-radius: var(--radius);
-            display: none;
+            overflow: hidden;
         }
-
-        .challenge-answer.show {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .next-challenge-btn {
+        
+        .ad-instructions {
             margin-top: 20px;
-        }
-
-        .offline-notice {
             color: var(--gray);
-            font-style: italic;
-            margin-top: 20px;
+            font-size: 0.9rem;
         }
 
         /* Navigation Bar */
@@ -700,7 +766,7 @@
             background: var(--white);
             padding: clamp(10px, 3vw, 15px) 0;
             box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
-            z-index: 1100; /* Higher than premium modal */
+            z-index: 1100;
             border-radius: var(--radius) var(--radius) 0 0;
         }
 
@@ -899,6 +965,46 @@
                 flex-direction: column;
             }
         }
+        
+        /* Toast Styles */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: white;
+  padding: 12px 24px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: none;
+  align-items: center;
+  gap: 12px;
+  z-index: 1000;
+  animation: slideUp 0.3s ease-out;
+}
+
+.toast.show {
+  display: flex;
+}
+.toast {
+  z-index: 9999; /* Higher than nav-bar (11000) and modals (2000) */
+}
+@@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.toast {
+  bottom: 20px;
+  transform: translateX(-50%); /* Remove from here */
+  /* Add: */
+  transform: translateX(-50%) translateY(100%);
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
     </style>
 </head>
 <body>
@@ -906,7 +1012,7 @@
     <div class="onboarding-container" id="onboardingContainer">
         <div class="onboarding-logo">
             <i class="fas fa-hat-wizard"></i>
-            <span> Magic Recipe generator</span>
+            <span> SnapChefAi: Magical Recipes</span>
         </div>
         <p class="onboarding-description">
             Transform boring ingredients into delicious meals with our AI-powered recipe generator.
@@ -952,11 +1058,16 @@
             
             <!-- Premium Lock Modal (initially hidden) -->
             <div class="premium-lock-modal" id="premiumLockModal" style="display: none;">
-                <h2><i class="fab fa-paypal"></i> Upgrade to Premium</h2>
-                <p>You've used all your free scans. Upgrade to premium for unlimited scans and exclusive features!</p>
-                <div id="paypal-lock-modal-container"></div>
-                <div class="time-remaining until open" id="timeRemaining">
-                    Time remaining: 2:00:00
+                <div class="premium-lock-content">
+                    <h2><i class="fab fa-paypal"></i> Upgrade to Premium</h2>
+                    <p>You've used all your free scans. Upgrade to premium for unlimited scans and exclusive features!</p>
+                    <div id="paypal-lock-modal-container"></div>
+                    <div class="time-remaining" id="timeRemaining">
+                        Time remaining: 2:00:00
+                    </div>
+                    <button class="btn btn-premium" onclick="showAdOptionPage()" style="margin-top: 15px;">
+                        <i class="fas fa-ad"></i> Watch Ads for 10 Free Scans
+                    </button>
                 </div>
             </div>
         </div>
@@ -1046,6 +1157,31 @@
             </p>
         </div>
 
+        <!-- Ad Watch Page -->
+        <div class="ad-watch-page" id="adWatchPage" style="display: none;">
+            <div class="ad-container">
+                <h2><i class="fas fa-ad"></i> Earn Free Scans</h2>
+                <p>Watch 4 ads to get 10 free scans</p>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="adProgressBar"></div>
+                    <div class="progress-text" id="adProgressText">0/4 ads watched</div>
+                </div>
+                
+                <div id="adDisplayArea">
+                    <!-- Unity Ad will be displayed here -->
+                </div>
+                
+                <button class="btn" id="startAdButton" onclick="startAdSequence()">
+                    <i class="fas fa-play"></i> Start Watching Ads
+                </button>
+                
+                <div class="ad-instructions">
+                    <p><i class="fas fa-info-circle"></i> Please watch each ad completely to count</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Navigation Bar -->
         <div class="nav-bar">
             <div class="nav-item active" onclick="showTab('scanPage')">
@@ -1117,7 +1253,19 @@
                 <button class="modal-btn modal-btn-confirm" onclick="clearSavedRecipes()">Delete All</button>
             </div>
         </div>
+        
+        
+        <!-- New toast version -->
+<button class="action-btn copy-btn" onclick="copyRecipe(${index}, event)">
+  <i class="fas fa-copy"></i> Copy
+</button>
+
+<button class="action-btn share-btn" onclick="shareRecipe(${index}, event)">
+  <i class="fas fa-share"></i> Share
+</button>
+
     </div>
+
 
     <script>
         const API_KEY = 'AIzaSyCt-Hu2WBkj0SBxaxVFckJFjkuHCBz9v_c';
@@ -1142,6 +1290,187 @@
             'spinach', 'mushroom', 'bell pepper', 'avocado', 'lemon'
         ];
         let currentChallenge = null;
+
+        // Unity Ads Configuration
+        const UNITY_GAME_ID = '5768221';
+        const UNITY_AD_UNIT_ID = 'Interstitial_Android';
+        
+        // Ad tracking variables
+        let adsWatched = 0;
+        const totalAdsRequired = 4;
+        let currentAd = null;
+
+        // ========== Unity Ads Integration ==========
+        function initializeUnityAds() {
+            if (typeof Unity !== 'undefined') {
+                try {
+                    // Initialize Unity Ads
+                    window.unityAds = Unity;
+                    unityAds.init({
+                        gameId: UNITY_GAME_ID,
+                        onComplete: function() {
+                            console.log('Unity Ads initialized successfully');
+                        },
+                        onFailed: function(error) {
+                            console.error('Unity Ads initialization failed:', error);
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error initializing Unity Ads:', error);
+                }
+            } else {
+                console.error('Unity Ads SDK not loaded');
+            }
+        }
+
+        function loadUnityAd() {
+            return new Promise((resolve, reject) => {
+                if (typeof unityAds === 'undefined') {
+                    reject('Unity Ads not initialized');
+                    return;
+                }
+
+                try {
+                    unityAds.load(UNITY_AD_UNIT_ID, {
+                        onComplete: function(placementId) {
+                            console.log('Ad loaded successfully:', placementId);
+                            resolve(placementId);
+                        },
+                        onFailed: function(placementId, error, msg) {
+                            console.error('Ad load failed:', placementId, error, msg);
+                            reject(error);
+                        }
+                    });
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+
+        function showUnityAd() {
+            return new Promise((resolve, reject) => {
+                if (typeof unityAds === 'undefined') {
+                    reject('Unity Ads not initialized');
+                    return;
+                }
+
+                try {
+                    unityAds.show(UNITY_AD_UNIT_ID, {
+                        onComplete: function(placementId) {
+                            console.log('Ad completed:', placementId);
+                            resolve(true);
+                        },
+                        onFailed: function(placementId, error, msg) {
+                            console.error('Ad show failed:', placementId, error, msg);
+                            reject(error);
+                        },
+                        onStart: function(placementId) {
+                            console.log('Ad started:', placementId);
+                        },
+                        onClick: function(placementId) {
+                            console.log('Ad clicked:', placementId);
+                        }
+                    });
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+
+        // ========== Ad Watching Functions ==========
+        function showAdOptionPage() {
+            hidePremiumLockModal();
+            document.getElementById('adWatchPage').style.display = 'flex';
+            resetAdProgress();
+        }
+
+        function resetAdProgress() {
+            adsWatched = 0;
+            updateAdProgress();
+            document.getElementById('startAdButton').style.display = 'block';
+            document.getElementById('adDisplayArea').innerHTML = '';
+        }
+
+        function updateAdProgress() {
+            const progress = (adsWatched / totalAdsRequired) * 100;
+            document.getElementById('adProgressBar').style.width = `${progress}%`;
+            document.getElementById('adProgressText').textContent = 
+                `${adsWatched}/${totalAdsRequired} ads watched`;
+        }
+
+        async function startAdSequence() {
+            if (!navigator.onLine) {
+                alert('You need to be online to watch ads');
+                return;
+            }
+
+            document.getElementById('startAdButton').style.display = 'none';
+            await showNextAd();
+        }
+
+        async function showNextAd() {
+            if (adsWatched >= totalAdsRequired) {
+                completeAdSequence();
+                return;
+            }
+
+            // Show loading state
+            document.getElementById('adDisplayArea').innerHTML = `
+                <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary);"></i>
+                </div>
+            `;
+
+            try {
+                // Load and show Unity ad
+                await loadUnityAd();
+                await showUnityAd();
+                
+                // Increment watched ads count
+                adsWatched++;
+                updateAdProgress();
+                
+                // Show next ad or complete sequence
+                if (adsWatched < totalAdsRequired) {
+                    setTimeout(showNextAd, 500);
+                } else {
+                    completeAdSequence();
+                }
+            } catch (error) {
+                console.error('Ad error:', error);
+                document.getElementById('adDisplayArea').innerHTML = `
+                    <div style="padding: 20px; text-align: center;">
+                        <i class="fas fa-exclamation-triangle" style="color: #ff7675; font-size: 2rem;"></i>
+                        <p>Failed to load ad. Please try again.</p>
+                        <button class="btn" onclick="startAdSequence()" style="margin-top: 15px;">
+                            <i class="fas fa-redo"></i> Retry
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function completeAdSequence() {
+            // Reward the user
+            setRemainingTries(10);
+            localStorage.setItem('lastAdWatchTime', new Date().getTime());
+            
+            // Hide ad page and show scan page
+            document.getElementById('adWatchPage').style.display = 'none';
+            showTab('scanPage');
+            
+            // Show success message
+            alert('Success! You have earned 10 free scans.');
+        }
+
+        function canWatchAds() {
+            const lastWatchTime = localStorage.getItem('lastAdWatchTime');
+            if (!lastWatchTime) return true;
+            
+            const now = new Date().getTime();
+            const oneDay = 24 * 60 * 60 * 1000;
+            return (now - parseInt(lastWatchTime)) > oneDay;
+        }
 
         // ========== PayPal Integration ==========
         function renderPayPalButton() {
@@ -1179,40 +1508,36 @@
 
         // ========== Onboarding Functions ==========
         function finishOnboarding() {
-            // Save user name
-            const nameInput = document.getElementById('userNameInput').value.trim();
-            if (nameInput) {
-                userName = nameInput;
-                localStorage.setItem('userName', userName);
-                updateUserNameDisplay();
-            }
-            
-            // Mark onboarding as complete
-            localStorage.setItem('onboarded', 'true');
-            
-            // Hide onboarding and show app
-            document.getElementById('onboardingContainer').style.display = 'none';
-            document.getElementById('appContent').style.display = 'block';
-            
-            // Initialize the app
-            initializeApp();
-            initTryCounter();
-        }
-
+    // Save user name
+    const nameInput = document.getElementById('userNameInput').value.trim();
+    if (nameInput) {
+        userName = nameInput;
+        localStorage.setItem('userName', userName);
+        updateUserNameDisplay();
+    }
+    
+    // Mark onboarding as complete
+    localStorage.setItem('onboarded', 'true');
+    
+    // Hide onboarding and show app
+    document.getElementById('onboardingContainer').style.display = 'none';
+    document.getElementById('appContent').style.display = 'block';
+    
+    // Initialize the app
+    initializeApp();
+    initTryCounter();
+}
         // ========== App Initialization ==========
         function initializeApp() {
             updateUserNameDisplay();
             showTab('scanPage');
             setupOfflineDetection();
             
-            // Register service worker for offline functionality
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js').then(registration => {
-                    console.log('ServiceWorker registration successful');
-                }).catch(err => {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-            }
+            // Load Unity Ads SDK
+            const script = document.createElement('script');
+            script.src = 'https://cdn.unityads.unity3d.com/unityads.js';
+            script.onload = initializeUnityAds;
+            document.head.appendChild(script);
         }
 
         function updateUserNameDisplay() {
@@ -1437,14 +1762,54 @@
         }
 
         // ========== Modal Functions ==========
-        function showSaveRecipeModal() {
-            document.getElementById('saveRecipeModal').classList.add('active');
-        }
+        // Toast Controller
+function showToast(message, duration = 3000) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  
+  setTimeout(() => toast.classList.remove('show'), duration);
+}
 
-        function hideSaveRecipeModal() {
-            document.getElementById('saveRecipeModal').classList.remove('active');
-        }
+// New Copy Function
+function copyRecipe(index, event) {
+  event.stopPropagation();
+  const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
+  const recipe = savedRecipes[index];
+  
+  const textToCopy = `Ingredients:\n${recipe.ingredients.join('\n')}\n\nRecipes:\n${recipe.recipes.join('\n')}`;
+  
+  navigator.clipboard.writeText(textToCopy)
+    .then(() => showToast('📋 Recipe copied to clipboard!'))
+    .catch(() => showToast('❌ Failed to copy recipe'));
+}
 
+// New Share Function
+async function shareRecipe(index, event) {
+  event.stopPropagation();
+  const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
+  const recipe = savedRecipes[index];
+
+  const shareData = {
+    title: 'Check out this recipe!',
+    text: `Ingredients: ${recipe.ingredients.join(', ')}\n\nRecipes: ${recipe.recipes.join('\n')}`,
+    url: window.location.href
+  };
+
+  try {
+    if(navigator.share) {
+      await navigator.share(shareData);
+      showToast('✨ Recipe shared successfully!');
+    } else {
+      await navigator.clipboard.writeText(shareData.text);
+      showToast('📋 Link copied to clipboard!');
+    }
+  } catch (err) {
+    if(err.name !== 'AbortError') {
+      showToast('❌ Sharing failed');
+    }
+  }
+}
         function showClearRecipesModal() {
             document.getElementById('clearRecipesModal').classList.add('active');
         }
@@ -1452,6 +1817,8 @@
         function hideClearRecipesModal() {
             document.getElementById('clearRecipesModal').classList.remove('active');
         }
+        
+        
 
         // ========== Image Processing ==========
         async function processImage(imageData) {
@@ -1618,7 +1985,7 @@
                 loadSavedRecipes();
                 
                 // Show modal confirmation
-                showSaveRecipeModal();
+                showToast('📚 Recipe saved successfully!');
             } catch (error) {
                 console.error('Error saving recipe:', error);
                 showError(error.message || 'Failed to save recipe. Please try again.');
@@ -1691,58 +2058,33 @@
             });
         }
 
-        function copyRecipe(index, event) {
-            event.stopPropagation();
-            const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
-            const recipe = savedRecipes[index];
-            
-            if (!recipe) return;
-            
-            const textToCopy = `
-                Ingredients:
-                ${recipe.ingredients.map(ing => `• ${ing}`).join('\n')}
-                
-                Recipes:
-                ${recipe.recipes.map((rec, i) => `${i+1}. ${rec}`).join('\n')}
-            `;
-            
-            navigator.clipboard.writeText(textToCopy.trim()).then(() => {
-                alert('Recipe copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-                alert('Failed to copy recipe');
-            });
-        }
+        
+        // New Share Function
+async function shareRecipe(index, event) {
+  event.stopPropagation();
+  const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
+  const recipe = savedRecipes[index];
 
-        function shareRecipe(index, event) {
-            event.stopPropagation();
-            const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
-            const recipe = savedRecipes[index];
-            
-            if (!recipe) return;
-            
-            const shareData = {
-                title: 'Recipe from Magic Recipe Generator',
-                text: `Check out this recipe I found!\n\nIngredients:\n${recipe.ingredients.join(', ')}\n\nRecipes:\n${recipe.recipes.join('\n')}`,
-                url: window.location.href
-            };
-            
-            if (navigator.share) {
-                navigator.share(shareData).catch(err => {
-                    console.log('Error sharing:', err);
-                });
-            } else {
-                // Fallback for browsers without Web Share API
-                const textArea = document.createElement('textarea');
-                textArea.value = `${shareData.title}\n\n${shareData.text}\n\n${shareData.url}`;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                alert('Recipe link copied to clipboard!');
-            }
-        }
+  const shareData = {
+    title: 'Check out this recipe!',
+    text: `Ingredients: ${recipe.ingredients.join(', ')}\n\nRecipes: ${recipe.recipes.join('\n')}`,
+    url: window.location.href
+  };
 
+  try {
+    if(navigator.share) {
+      await navigator.share(shareData);
+      showToast('✨ Recipe shared successfully!');
+    } else {
+      await navigator.clipboard.writeText(shareData.text);
+      showToast('📋 Link copied to clipboard!');
+    }
+  } catch (err) {
+    if(err.name !== 'AbortError') {
+      showToast('❌ Sharing failed');
+    }
+  }
+}
         function clearSavedRecipes() {
             localStorage.removeItem('savedRecipes');
             loadSavedRecipes();
@@ -1989,6 +2331,7 @@
             document.getElementById('challengesPage').style.display = 'none';
             document.getElementById('settingsPage').style.display = 'none';
             document.getElementById('premiumPage').style.display = 'none';
+            document.getElementById('adWatchPage').style.display = 'none';
             
             // Show selected tab
             if (tabId === 'scanPage') {
@@ -2042,5 +2385,7 @@
             document.getElementById('nextChallengeBtn').addEventListener('click', generateChallenge);
         });
     </script>
+    <!-- Toast Container -->
+<div id="toast" class="toast" aria-live="polite" role="alert"></div>
 </body>
 </html>
