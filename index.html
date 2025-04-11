@@ -1005,6 +1005,51 @@
 .toast.show {
   transform: translateX(-50%) translateY(0);
 }
+
+  .ad-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        gap: 10px;
+        color: var(--primary);
+    }
+    
+    .ad-error {
+        text-align: center;
+        padding: 20px;
+        color: #ff7675;
+    }
+    
+    .ad-error i {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+    
+    #adVideoContainer {
+            width: 100%;
+            height: 250px;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            margin: 20px 0;
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        
+        #adVideoContainer video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .ad-status {
+            margin: 10px 0;
+            font-weight: bold;
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
@@ -1065,9 +1110,11 @@
                     <div class="time-remaining" id="timeRemaining">
                         Time remaining: 2:00:00
                     </div>
+                    <!-- i might do this later
                     <button class="btn btn-premium" onclick="showAdOptionPage()" style="margin-top: 15px;">
                         <i class="fas fa-ad"></i> Watch Ads for 10 Free Scans
                     </button>
+                    -->
                 </div>
             </div>
         </div>
@@ -1158,30 +1205,32 @@
         </div>
 
         <!-- Ad Watch Page -->
-        <div class="ad-watch-page" id="adWatchPage" style="display: none;">
-            <div class="ad-container">
-                <h2><i class="fas fa-ad"></i> Earn Free Scans</h2>
-                <p>Watch 4 ads to get 10 free scans</p>
-                
-                <div class="progress-container">
-                    <div class="progress-bar" id="adProgressBar"></div>
-                    <div class="progress-text" id="adProgressText">0/4 ads watched</div>
-                </div>
-                
-                <div id="adDisplayArea">
-                    <!-- Unity Ad will be displayed here -->
-                </div>
-                
-                <button class="btn" id="startAdButton" onclick="startAdSequence()">
-                    <i class="fas fa-play"></i> Start Watching Ads
-                </button>
-                
-                <div class="ad-instructions">
-                    <p><i class="fas fa-info-circle"></i> Please watch each ad completely to count</p>
-                </div>
+     <div class="ad-watch-page" id="adWatchPage" style="display: none;">
+        <div class="ad-container">
+            <h2><i class="fas fa-ad"></i> Earn Free Scans</h2>
+            <p>Watch an ad to get 10 free scans</p>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="adProgressBar"></div>
+                <div class="progress-text" id="adProgressText">Ready</div>
+            </div>
+            
+            <div id="adVideoContainer">
+                <p>Ad will appear here when started</p>
+            </div>
+            
+            <div class="ad-status" id="adStatus"></div>
+            
+            <button class="btn" id="startAdButton" onclick="startAdSequence()">
+                <i class="fas fa-play"></i> Start Ad
+            </button>
+            
+            <div class="ad-instructions">
+                <p><i class="fas fa-info-circle"></i> Please watch the entire ad to receive your reward</p>
             </div>
         </div>
-
+    </div>
+    
         <!-- Navigation Bar -->
         <div class="nav-bar">
             <div class="nav-item active" onclick="showTab('scanPage')">
@@ -1253,18 +1302,14 @@
                 <button class="modal-btn modal-btn-confirm" onclick="clearSavedRecipes()">Delete All</button>
             </div>
         </div>
-
     </div>
 
-<!-- New toast version 
-<button class="action-btn copy-btn" onclick="copyRecipe(${index}, event)">
-  <i class="fas fa-copy"></i> Copy
-</button>
+    <!-- Toast Container -->
+    <div id="toast" class="toast" aria-live="polite" role="alert"></div>
 
-<button class="action-btn share-btn" onclick="shareRecipe(${index}, event)">
-  <i class="fas fa-share"></i> Share
-</button>
--->
+    <!-- HilltopAds Script -->
+    <script src="https://cijonijo.com/d.mgFuzPdkG/NfvYZzGnUf/PeCmT9uuTZoUIlikEP-TwYlyBNXDEA/ySMsDmMftrNej/IE0NMiDBIpwtN-CEZNsMafWK1XpGddDH0Ixn"></script>
+
     <script>
         const API_KEY = 'AIzaSyCt-Hu2WBkj0SBxaxVFckJFjkuHCBz9v_c';
         let currentStream = null;
@@ -1289,91 +1334,185 @@
         ];
         let currentChallenge = null;
 
-        // Unity Ads Configuration
-        const UNITY_GAME_ID = '5768221';
-        const UNITY_AD_UNIT_ID = 'Interstitial_Android';
-        
         // Ad tracking variables
         let adsWatched = 0;
         const totalAdsRequired = 4;
         let currentAd = null;
 
-        // ========== Unity Ads Integration ==========
-        function initializeUnityAds() {
-            if (typeof Unity !== 'undefined') {
-                try {
-                    // Initialize Unity Ads
-                    window.unityAds = Unity;
-                    unityAds.init({
-                        gameId: UNITY_GAME_ID,
-                        onComplete: function() {
-                            console.log('Unity Ads initialized successfully');
-                        },
-                        onFailed: function(error) {
-                            console.error('Unity Ads initialization failed:', error);
-                        }
-                    });
-                } catch (error) {
-                    console.error('Error initializing Unity Ads:', error);
-                }
-            } else {
-                console.error('Unity Ads SDK not loaded');
+        // ========== HilltopAds Integration ==========
+        // ========== HilltopAds Video Implementation ==========
+        let adVideoPlayer = null;
+        let adTimeout = null;
+        const AD_DURATION = 30000; // 30 seconds for the ad
+
+        function getElementOrThrow(id) {
+            const element = document.getElementById(id);
+            if (!element) {
+                throw new Error(`Element with ID ${id} not found`);
+            }
+            return element;
+        }
+
+        function loadAdVideo() {
+            try {
+                const container = getElementOrThrow('adVideoContainer');
+                container.innerHTML = '';
+                
+                // Create video element
+                adVideoPlayer = document.createElement('video');
+                adVideoPlayer.controls = false;
+                adVideoPlayer.autoplay = true;
+                adVideoPlayer.muted = true; // Start muted to allow autoplay
+                adVideoPlayer.playsInline = true;
+                
+                // Create source element
+                const source = document.createElement('source');
+                source.src = 'https://cijonijo.com/d.mgFuzPdkG/NfvYZzGnUf/PeCmT9uuTZoUIlikEP-TwYlyBNXDEA/ySMsDmMftrNej/IE0NMiDBIpwtN-CEZNsMafWK1XpGddDH0Ixn';
+                source.type = 'video/mp4';
+                
+                adVideoPlayer.appendChild(source);
+                container.appendChild(adVideoPlayer);
+                
+                return new Promise((resolve, reject) => {
+                    adVideoPlayer.oncanplay = () => {
+                        updateAdStatus('Ad ready to play');
+                        resolve(adVideoPlayer);
+                    };
+                    
+                    adVideoPlayer.onerror = (e) => {
+                        updateAdStatus('Error loading ad');
+                        container.innerHTML = `
+                            <div class="ad-error">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <p>Could not load ad video</p>
+                            </div>
+                        `;
+                        reject(new Error('Failed to load ad video'));
+                    };
+                    
+                    adVideoPlayer.onended = () => {
+                        clearTimeout(adTimeout);
+                        adCompleted();
+                    };
+                });
+                
+            } catch (error) {
+                console.error('Error setting up ad video:', error);
+                updateAdStatus('Error setting up ad');
+                throw error;
             }
         }
 
-        function loadUnityAd() {
-            return new Promise((resolve, reject) => {
-                if (typeof unityAds === 'undefined') {
-                    reject('Unity Ads not initialized');
-                    return;
-                }
-
-                try {
-                    unityAds.load(UNITY_AD_UNIT_ID, {
-                        onComplete: function(placementId) {
-                            console.log('Ad loaded successfully:', placementId);
-                            resolve(placementId);
-                        },
-                        onFailed: function(placementId, error, msg) {
-                            console.error('Ad load failed:', placementId, error, msg);
-                            reject(error);
-                        }
-                    });
-                } catch (error) {
-                    reject(error);
-                }
-            });
+        function updateAdStatus(message) {
+            try {
+                const statusElement = getElementOrThrow('adStatus');
+                statusElement.textContent = message;
+            } catch (error) {
+                console.error('Error updating ad status:', error);
+            }
         }
 
-        function showUnityAd() {
-            return new Promise((resolve, reject) => {
-                if (typeof unityAds === 'undefined') {
-                    reject('Unity Ads not initialized');
-                    return;
-                }
-
-                try {
-                    unityAds.show(UNITY_AD_UNIT_ID, {
-                        onComplete: function(placementId) {
-                            console.log('Ad completed:', placementId);
-                            resolve(true);
-                        },
-                        onFailed: function(placementId, error, msg) {
-                            console.error('Ad show failed:', placementId, error, msg);
-                            reject(error);
-                        },
-                        onStart: function(placementId) {
-                            console.log('Ad started:', placementId);
-                        },
-                        onClick: function(placementId) {
-                            console.log('Ad clicked:', placementId);
-                        }
-                    });
-                } catch (error) {
-                    reject(error);
-                }
-            });
+        function updateAdProgress(message) {
+            try {
+                const progressElement = getElementOrThrow('adProgressText');
+                progressElement.textContent = message;
+            } catch (error) {
+                console.error('Error updating progress:', error);
+            }
         }
+
+        async function startAdSequence() {
+            try {
+                const startButton = getElementOrThrow('startAdButton');
+                startButton.style.display = 'none';
+                updateAdStatus('Loading ad...');
+                updateAdProgress('Loading...');
+                
+                await loadAdVideo();
+                
+                // Start playing the ad
+                try {
+                    await adVideoPlayer.play();
+                    updateAdStatus('Ad playing - please watch');
+                    updateAdProgress('Ad in progress...');
+                    
+                    // Fallback timeout in case onended doesn't fire
+                    adTimeout = setTimeout(() => {
+                        if (adVideoPlayer && !adVideoPlayer.ended) {
+                            updateAdStatus('Ad completed');
+                            adCompleted();
+                        }
+                    }, AD_DURATION);
+                    
+                } catch (playError) {
+                    console.error('Play error:', playError);
+                    updateAdStatus('Error playing ad');
+                    // If play fails, try with muted video
+                    if (adVideoPlayer) {
+                        adVideoPlayer.muted = true;
+                        await adVideoPlayer.play();
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Ad failed:', error);
+                updateAdStatus('Ad failed - please try again');
+                updateAdProgress('Failed');
+                
+                try {
+                    const container = getElementOrThrow('adVideoContainer');
+                    container.innerHTML = `
+                        <div class="ad-error">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Ad failed to load. Please try again.</p>
+                        </div>
+                    `;
+                    
+                    const startButton = getElementOrThrow('startAdButton');
+                    startButton.style.display = 'block';
+                    startButton.innerHTML = '<i class="fas fa-redo"></i> Try Again';
+                    
+                } catch (elementError) {
+                    console.error('Error showing retry UI:', elementError);
+                }
+            }
+        }
+
+        function adCompleted() {
+            try {
+                updateAdStatus('Ad completed - rewarding scans');
+                updateAdProgress('Completed');
+                
+                // Reward the user
+                setRemainingTries(10);
+                localStorage.setItem('lastAdWatchTime', new Date().getTime());
+                
+                // Hide ad page after short delay
+                setTimeout(() => {
+                    const adPage = getElementOrThrow('adWatchPage');
+                    adPage.style.display = 'none';
+                    showTab('scanPage');
+                    showToast('Success! You have earned 10 free scans.');
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Error completing ad:', error);
+            } finally {
+                // Clean up
+                if (adVideoPlayer) {
+                    adVideoPlayer.pause();
+                    adVideoPlayer.removeAttribute('src');
+                    adVideoPlayer.load();
+                    adVideoPlayer = null;
+                }
+                if (adTimeout) {
+                    clearTimeout(adTimeout);
+                    adTimeout = null;
+                }
+            }
+        }
+
+
 
         // ========== Ad Watching Functions ==========
         function showAdOptionPage() {
@@ -1390,61 +1529,39 @@
         }
 
         function updateAdProgress() {
-            const progress = (adsWatched / totalAdsRequired) * 100;
+            const progress = (adsWatched / 1) * 100; // Only 1 ad needed now
             document.getElementById('adProgressBar').style.width = `${progress}%`;
             document.getElementById('adProgressText').textContent = 
-                `${adsWatched}/${totalAdsRequired} ads watched`;
+                `${adsWatched}/1 ads watched`;
         }
 
         async function startAdSequence() {
-            if (!navigator.onLine) {
-                alert('You need to be online to watch ads');
-                return;
-            }
-
-            document.getElementById('startAdButton').style.display = 'none';
-            await showNextAd();
-        }
-
-        async function showNextAd() {
-            if (adsWatched >= totalAdsRequired) {
-                completeAdSequence();
-                return;
-            }
-
-            // Show loading state
-            document.getElementById('adDisplayArea').innerHTML = `
-                <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary);"></i>
-                </div>
-            `;
-
             try {
-                // Load and show Unity ad
-                await loadUnityAd();
-                await showUnityAd();
+                document.getElementById('startAdButton').style.display = 'none';
                 
-                // Increment watched ads count
-                adsWatched++;
-                updateAdProgress();
-                
-                // Show next ad or complete sequence
-                if (adsWatched < totalAdsRequired) {
-                    setTimeout(showNextAd, 500);
-                } else {
-                    completeAdSequence();
-                }
-            } catch (error) {
-                console.error('Ad error:', error);
+                // Show loading state
                 document.getElementById('adDisplayArea').innerHTML = `
-                    <div style="padding: 20px; text-align: center;">
-                        <i class="fas fa-exclamation-triangle" style="color: #ff7675; font-size: 2rem;"></i>
-                        <p>Failed to load ad. Please try again.</p>
-                        <button class="btn" onclick="startAdSequence()" style="margin-top: 15px;">
+                    <div class="ad-loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <span>Loading ad...</span>
+                    </div>
+                `;
+
+                // Load the ad
+                await loadHilltopAd();
+                
+            } catch (error) {
+                console.error('Ad failed:', error);
+                document.getElementById('adDisplayArea').innerHTML = `
+                    <div class="ad-error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Ad failed to load. Please try again.</p>
+                        <button class="btn" onclick="startAdSequence()">
                             <i class="fas fa-redo"></i> Retry
                         </button>
                     </div>
                 `;
+                document.getElementById('startAdButton').style.display = 'block';
             }
         }
 
@@ -1458,7 +1575,7 @@
             showTab('scanPage');
             
             // Show success message
-            alert('Success! You have earned 10 free scans.');
+            showToast('Success! You have earned 10 free scans.');
         }
 
         function canWatchAds() {
@@ -1498,7 +1615,7 @@
             hidePremiumLockModal();
             
             // Show success message
-            alert('Payment successful! Premium features are now unlocked.');
+            showToast('Payment successful! Premium features are now unlocked.');
             
             // Refresh the UI
             showTab(currentTab);
@@ -1506,36 +1623,31 @@
 
         // ========== Onboarding Functions ==========
         function finishOnboarding() {
-    // Save user name
-    const nameInput = document.getElementById('userNameInput').value.trim();
-    if (nameInput) {
-        userName = nameInput;
-        localStorage.setItem('userName', userName);
-        updateUserNameDisplay();
-    }
-    
-    // Mark onboarding as complete
-    localStorage.setItem('onboarded', 'true');
-    
-    // Hide onboarding and show app
-    document.getElementById('onboardingContainer').style.display = 'none';
-    document.getElementById('appContent').style.display = 'block';
-    
-    // Initialize the app
-    initializeApp();
-    initTryCounter();
-}
+            // Save user name
+            const nameInput = document.getElementById('userNameInput').value.trim();
+            if (nameInput) {
+                userName = nameInput;
+                localStorage.setItem('userName', userName);
+                updateUserNameDisplay();
+            }
+            
+            // Mark onboarding as complete
+            localStorage.setItem('onboarded', 'true');
+            
+            // Hide onboarding and show app
+            document.getElementById('onboardingContainer').style.display = 'none';
+            document.getElementById('appContent').style.display = 'block';
+            
+            // Initialize the app
+            initializeApp();
+            initTryCounter();
+        }
+
         // ========== App Initialization ==========
         function initializeApp() {
             updateUserNameDisplay();
             showTab('scanPage');
             setupOfflineDetection();
-            
-            // Load Unity Ads SDK
-            const script = document.createElement('script');
-            script.src = 'https://cdn.unityads.unity3d.com/unityads.js';
-            script.onload = initializeUnityAds;
-            document.head.appendChild(script);
         }
 
         function updateUserNameDisplay() {
@@ -1759,55 +1871,55 @@
             document.getElementById('errorMessage').style.display = 'none';
         }
 
-        // ========== Modal Functions ==========
         // Toast Controller
-function showToast(message, duration = 3000) {
-  const toast = document.getElementById('toast');
-  toast.textContent = message;
-  toast.classList.add('show');
-  
-  setTimeout(() => toast.classList.remove('show'), duration);
-}
+        function showToast(message, duration = 3000) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => toast.classList.remove('show'), duration);
+        }
 
-// New Copy Function
-function copyRecipe(index, event) {
-  event.stopPropagation();
-  const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
-  const recipe = savedRecipes[index];
-  
-  const textToCopy = `Ingredients:\n${recipe.ingredients.join('\n')}\n\nRecipes:\n${recipe.recipes.join('\n')}`;
-  
-  navigator.clipboard.writeText(textToCopy)
-    .then(() => showToast('📋 Recipe copied to clipboard!'))
-    .catch(() => showToast('❌ Failed to copy recipe'));
-}
+        // New Copy Function
+        function copyRecipe(index, event) {
+            event.stopPropagation();
+            const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
+            const recipe = savedRecipes[index];
+            
+            const textToCopy = `Ingredients:\n${recipe.ingredients.join('\n')}\n\nRecipes:\n${recipe.recipes.join('\n')}`;
+            
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => showToast('📋 Recipe copied to clipboard!'))
+                .catch(() => showToast('❌ Failed to copy recipe'));
+        }
 
-// New Share Function
-async function shareRecipe(index, event) {
-  event.stopPropagation();
-  const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
-  const recipe = savedRecipes[index];
+        // New Share Function
+        async function shareRecipe(index, event) {
+            event.stopPropagation();
+            const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
+            const recipe = savedRecipes[index];
 
-  const shareData = {
-    title: 'Check out this recipe!',
-    text: `Ingredients: ${recipe.ingredients.join(', ')}\n\nRecipes: ${recipe.recipes.join('\n')}`,
-    url: window.location.href
-  };
+            const shareData = {
+                title: 'Check out this recipe!',
+                text: `Ingredients: ${recipe.ingredients.join(', ')}\n\nRecipes: ${recipe.recipes.join('\n')}`,
+                url: window.location.href
+            };
 
-  try {
-    if(navigator.share) {
-      await navigator.share(shareData);
-      showToast('✨ Recipe shared successfully!');
-    } else {
-      await navigator.clipboard.writeText(shareData.text);
-      showToast('📋 Link copied to clipboard!');
-    }
-  } catch (err) {
-    if(err.name !== 'AbortError') {
-      showToast('❌ Sharing failed');
-    }
-  }
-}
+            try {
+                if(navigator.share) {
+                    await navigator.share(shareData);
+                    showToast('✨ Recipe shared successfully!');
+                } else {
+                    await navigator.clipboard.writeText(shareData.text);
+                    showToast('📋 Link copied to clipboard!');
+                }
+            } catch (err) {
+                if(err.name !== 'AbortError') {
+                    showToast('❌ Sharing failed');
+                }
+            }
+        }
+
         function showClearRecipesModal() {
             document.getElementById('clearRecipesModal').classList.add('active');
         }
@@ -1815,8 +1927,6 @@ async function shareRecipe(index, event) {
         function hideClearRecipesModal() {
             document.getElementById('clearRecipesModal').classList.remove('active');
         }
-        
-        
 
         // ========== Image Processing ==========
         async function processImage(imageData) {
@@ -1982,7 +2092,7 @@ async function shareRecipe(index, event) {
                 showTab('savedRecipes');
                 loadSavedRecipes();
                 
-                // Show modal confirmation
+                // Show success message
                 showToast('📚 Recipe saved successfully!');
             } catch (error) {
                 console.error('Error saving recipe:', error);
@@ -2056,33 +2166,6 @@ async function shareRecipe(index, event) {
             });
         }
 
-        
-        // New Share Function
-async function shareRecipe(index, event) {
-  event.stopPropagation();
-  const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
-  const recipe = savedRecipes[index];
-
-  const shareData = {
-    title: 'Check out this recipe!',
-    text: `Ingredients: ${recipe.ingredients.join(', ')}\n\nRecipes: ${recipe.recipes.join('\n')}`,
-    url: window.location.href
-  };
-
-  try {
-    if(navigator.share) {
-      await navigator.share(shareData);
-      showToast('✨ Recipe shared successfully!');
-    } else {
-      await navigator.clipboard.writeText(shareData.text);
-      showToast('📋 Link copied to clipboard!');
-    }
-  } catch (err) {
-    if(err.name !== 'AbortError') {
-      showToast('❌ Sharing failed');
-    }
-  }
-}
         function clearSavedRecipes() {
             localStorage.removeItem('savedRecipes');
             loadSavedRecipes();
@@ -2383,7 +2466,6 @@ async function shareRecipe(index, event) {
             document.getElementById('nextChallengeBtn').addEventListener('click', generateChallenge);
         });
     </script>
-    <!-- Toast Container -->
-<div id="toast" class="toast" aria-live="polite" role="alert"></div>
+    
 </body>
 </html>
