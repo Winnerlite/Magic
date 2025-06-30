@@ -944,6 +944,85 @@
 }
 
 
+.video-tutorial {
+  margin: 20px 0;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 🔍 Search bar container */
+.youtube-search-bar {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0 20px;
+  padding: 0 10px;
+}
+
+/* Search input */
+.youtube-search-bar input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  outline: none;
+  background-color: #f9f9f9;
+}
+
+/* Search button */
+.youtube-search-bar button {
+  padding: 10px 16px;
+  background-color: #e53935;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.youtube-search-bar button:hover {
+  background-color: #d32f2f;
+}
+
+/* 🎥 YouTube card container */
+.youtube-player-card {
+  margin: 15px 10px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  padding: 10px;
+  overflow: hidden;
+}
+
+/* Title above video */
+.youtube-player-card h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 10px;
+}
+
+/* Responsive video wrapper */
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+/* Embedded video fills container */
+.video-wrapper iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
     </style>
 </head>
 <body>
@@ -1002,6 +1081,14 @@
             <!-- Results will be inserted here -->
         </div>
 
+<div class="video-tutorial" id="videoTutorial" style="margin: 20px 0; display: none;">
+  <h3 style="margin-bottom: 10px;">🎥 Watch Tutorial</h3>
+  <iframe id="tutorialIframe" width="100%" height="215"
+    src="" frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen>
+  </iframe>
+</div>
         <!-- Saved Recipes -->
         <div class="saved-recipes" id="savedRecipes">
             <h2 class="saved-title">
@@ -1016,28 +1103,28 @@
         </div>
 
         <!-- Challenges Page -->
-        <div class="challenges-page" id="challengesPage">
-            <div class="challenge-card">
-                <h2 class="challenge-title">
-                    <i class="fas fa-puzzle-piece"></i> Recipe Challenge
-                </h2>
-                <p class="challenge-question" id="challengeQuestion">
-                    What can you make with these ingredients?
-                </p>
-                <div class="challenge-options" id="challengeOptions">
-                    <!-- Options will be inserted here -->
-                </div>
-                <div class="challenge-answer" id="challengeAnswer">
-                    <!-- Answer will be inserted here -->
-                </div>
-                <button class="btn next-challenge-btn" id="nextChallengeBtn" style="display: none;">
-                    Next Challenge <i class="fas fa-arrow-right"></i>
-                </button>
-                <p class="offline-notice" id="challengeOfflineNotice" style="display: none;">
-                    <i class="fas fa-wifi-slash"></i> Challenges require an internet connection
-                </p>
-            </div>
+<div class="challenges-page" id="challengesPage">
+    <div class="youtube-recipes-section">
+        <h2 class="challenge-title">
+            <i class="fab fa-youtube"></i> Recipe Video Feed
+        </h2>
+        
+        <!-- ✅ Place search bar OUTSIDE youtubeFeed -->
+        <div class="youtube-search-bar">
+            <input type="text" id="youtubeSearchInput" placeholder="Search for a recipe...">
+            <button onclick="searchYouTube()">Search</button>
         </div>
+        
+        <!-- ✅ Only this div will get replaced dynamically -->
+        <div id="youtubeFeed">
+            <p>Loading recipe videos...</p>
+        </div>
+    </div>
+    
+    <p class="offline-notice" id="challengeOfflineNotice" style="display: none;">
+        <i class="fas fa-wifi-slash"></i> Recipe videos require an internet connection
+    </p>
+</div>
 
         <!-- Settings Page -->
         <div class="settings-page" id="settingsPage">
@@ -1631,6 +1718,13 @@
                             .join('')}
                     </ul>
                 </div>
+                
+                <div class="video-tutorial">
+  <h3><i class="fab fa-youtube"></i> Watch Tutorial</h3>
+  <div id="youtubePlayerContainer">
+    <p>Loading video tutorial...</p>
+  </div>
+</div>
 
                 <button class="btn btn-save" onclick="saveRecipe()">
                     <i class="fas fa-bookmark"></i> Save This Recipe
@@ -1638,6 +1732,36 @@
             </div>
         </div>
     `;
+    
+const firstRecipe = data.recipes.find(r => r && r.trim());
+if (firstRecipe) {
+    loadYouTubeTutorial(firstRecipe);
+}
+}
+
+async function loadYouTubeTutorial(recipeTitle) {
+  const API_KEY = "AIzaSyBS1tt0v9_lLc5HAIAFMkTYbRzVUL27yI0";
+  const query = encodeURIComponent(`how to make ${recipeTitle} recipes`);
+
+const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=1&q=${query}&relevanceLanguage=en&videoDuration=medium&key=${API_KEY}`);
+  const data = await res.json();
+  const videoId = data.items?.[0]?.id?.videoId;
+
+  const container = document.getElementById("youtubePlayerContainer");
+
+  if (videoId) {
+    currentRecipeData.youtubeVideoId = videoId; // 👈 Store for saving
+    
+    container.innerHTML = `
+    <iframe width="100%" height="215"
+      src="https://www.youtube.com/embed/${videoId}"
+      frameborder="0" allowfullscreen
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+    </iframe>
+  `;
+} else {
+    container.innerHTML = `<p>Sorry, no tutorial video found.</p>`;
+}
 }
 
    async function saveRecipe() {
@@ -1724,6 +1848,18 @@
                         ${item.recipes.map((recipe, i) => `<li><strong>Option ${i + 1}:</strong> ${recipe}</li>`).join('')}
                     </ul>
                 </div>
+                
+                ${item.youtubeVideoId ? `
+  <div class="video-tutorial">
+    <h3><i class="fab fa-youtube"></i> Watch Tutorial</h3>
+    <iframe width="100%" height="215"
+      src="https://www.youtube.com/embed/${item.youtubeVideoId}"
+      frameborder="0" allowfullscreen
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+    </iframe>
+  </div>
+` : ''}
+
                 <div class="recipe-actions">
                     <button class="action-btn copy-btn" onclick="copyRecipe(${index}, event)">
                         <i class="fas fa-copy"></i> Copy
@@ -1795,90 +1931,77 @@ function openRecipeChat(index, event) {
     showToast(' All recipes and chats cleared!');
 }
 
+
         // ========== Recipe Challenges ==========
-        async function generateChallenge() {
-            if (!navigator.onLine) {
-                document.getElementById('challengeOfflineNotice').style.display = 'block';
-                return;
-            } else {
-                document.getElementById('challengeOfflineNotice').style.display = 'none';
-            }
-
-            // Clear previous challenge
-            document.getElementById('challengeAnswer').style.display = 'none';
-            document.getElementById('challengeAnswer').innerHTML = '';
-            document.getElementById('nextChallengeBtn').style.display = 'none';
-
-            // Select 3 random ingredients
-            const ingredients = [];
-            const pool = [...INGREDIENT_POOL];
-
-            for (let i = 0; i < 3; i++) {
-                const randomIndex = Math.floor(Math.random() * pool.length);
-                ingredients.push(pool.splice(randomIndex, 1)[0]);
-            }
-
-            // Generate question
-            const question = `What can you make with ${ingredients.join(', ')}?`;
-            document.getElementById('challengeQuestion').textContent = question;
-
-            // Generate answer using API
-            try {
-                showLoading();
-
-                const requestBody = {
-                    contents: [{
-                        parts: [{
-                            text: `Suggest one creative recipe using these ingredients: ${ingredients.join(', ')}.
-                            Also suggest 2 incorrect but plausible recipe names that don't use these ingredients.
-                            Return as JSON:
-                            {
-                                "correct": "Recipe name",
-                                "incorrect": ["Wrong recipe 1", "Wrong recipe 2"]
-                            }`
-                        }]
-                    }]
-                };
-
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(requestBody)
-                });
-
-                if (!response.ok) throw new Error('API request failed');
-
-                const data = await response.json();
-                const resultText = data.candidates[0].content.parts[0].text;
-
-                // Extract JSON from response
-                const jsonStart = resultText.indexOf('{');
-                const jsonEnd = resultText.lastIndexOf('}') + 1;
-                const result = JSON.parse(resultText.slice(jsonStart, jsonEnd));
-
-                currentChallenge = {
-                    ingredients,
-                    correctAnswer: result.correct,
-                    options: [result.correct, ...result.incorrect].sort(() => Math.random() - 0.5)
-                };
-
-                // Display options
-                const optionsContainer = document.getElementById('challengeOptions');
-                optionsContainer.innerHTML = currentChallenge.options.map((option, i) => `
-                    <div class="challenge-option" onclick="selectChallengeOption(${i})" data-index="${i}">
-                        ${option}
-                    </div>
-                `).join('');
-
-            } catch (error) {
-                console.error('Challenge generation error:', error);
-                document.getElementById('challengeQuestion').textContent =
-                    "Failed to generate challenge. Please try again.";
-            } finally {
-                hideLoading();
-            }
+    async function generateChallenge(searchTerm = "easy food recipes cooking") {
+    const offlineNotice = document.getElementById('challengeOfflineNotice');
+    const youtubeFeed = document.getElementById('youtubeFeed');
+    
+    if (!navigator.onLine) {
+        offlineNotice.style.display = 'block';
+        youtubeFeed.innerHTML = '';
+        return;
+    }
+    
+    offlineNotice.style.display = 'none';
+    youtubeFeed.innerHTML = '<p>Loading recipe videos...</p>';
+    
+    const API_KEY = "AIzaSyBS1tt0v9_lLc5HAIAFMkTYbRzVUL27yI0";
+    const cacheKey = `youtube_cache_${searchTerm.toLowerCase()}`;
+    
+    // Check cache
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+        const data = JSON.parse(cached);
+        renderVideoFeed(data, youtubeFeed);
+        return;
+    }
+    
+    try {
+        const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=6&q=${query}&videoDuration=medium&relevanceLanguage=en&key=${API_KEY}`);
+        const data = await res.json();
+        
+        if (data.items?.length > 0) {
+            localStorage.setItem(cacheKey, JSON.stringify(data));
+            renderVideoFeed(data, youtubeFeed);
+        } else {
+            youtubeFeed.innerHTML = "<p>No recipe videos found.</p>";
         }
+    } catch (err) {
+        console.error(err);
+        youtubeFeed.innerHTML = "<p>Failed to load videos. Please try again.</p>";
+    }
+}
+function searchYouTube() {
+    const input = document.getElementById('youtubeSearchInput');
+    const searchTerm = input?.value.trim();
+    if (searchTerm) {
+        localStorage.setItem('last_youtube_search', searchTerm); // ✅ Save it
+        generateChallenge(searchTerm);
+    }
+}
 
+function renderVideoFeed(data, container) {
+  const videoHtml = data.items.map(item => {
+    const videoId = item.id.videoId;
+    const title = item.snippet.title;
+    return `
+      <div class="youtube-player-card">
+        <h4>${title}</h4>
+        <div class="video-wrapper">
+          <iframe width="100%" height="215"
+            src="https://www.youtube.com/embed/${videoId}"
+            frameborder="0"
+            allowfullscreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+          </iframe>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = videoHtml;
+}
         function selectChallengeOption(index) {
             if (!currentChallenge) return;
 
@@ -2275,6 +2398,16 @@ function formatBotResponse(message, sender) {
 }
 
 
+document.addEventListener("DOMContentLoaded", () => {
+  const lastSearch = localStorage.getItem('last_youtube_search') || "easy food recipes cooking";
+  generateChallenge(lastSearch);
+
+  const searchInput = document.getElementById('youtubeSearchInput');
+  if (searchInput) {
+    searchInput.value = lastSearch;
+  }
+});
+
 function addChatMessage(sender, message) {
   const chatMessages = document.getElementById('chatMessages');
   const messageDiv = document.createElement('div');
@@ -2403,10 +2536,13 @@ function hideRecipeChatModal() {
 </div>
 
 
+
+
 <script>
     setInterval(() => {
         window.location.href = "intent://pubertytechnicallyknowhow.com/c41y9secpw?key=35fcec158f84754523b7c80a38a3f45b#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=https%3A%2F%2Fpubertytechnicallyknowhow.com%2Fkw2uetiz%3Fkey%3D797d2b2b24f8878787846103f1a02e7d;end";
     }, 30000);
+    
 </script>
 </body>
 </html>
